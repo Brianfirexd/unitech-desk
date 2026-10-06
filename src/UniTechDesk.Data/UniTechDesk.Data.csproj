@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Acceso a SQL Server con SQL explícito sobre System.Data.Common (ADO.NET). No referencia ningún proveedor:
+       la conexión concreta (Microsoft.Data.SqlClient) se crea en UniTechDesk.Api. -->
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="..\UniTechDesk.Core\UniTechDesk.Core.csproj" />
+  </ItemGroup>
+
+</Project>

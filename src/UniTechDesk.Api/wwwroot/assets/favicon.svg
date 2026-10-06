@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="UniTech Desk">
+  <rect width="64" height="64" rx="14" fill="#1e3a8a"/>
+  <path d="M32 14 8 26l24 12 24-12-24-12Z" fill="#e5edff"/>
+  <path d="M16 33v10c0 4 7 9 16 9s16-5 16-9V33l-16 8-16-8Z" fill="#a4bffc"/>
+  <path d="M54 28v14" stroke="#e5edff" stroke-width="3" stroke-linecap="round"/>
+</svg>

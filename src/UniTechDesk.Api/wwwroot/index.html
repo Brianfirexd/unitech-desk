@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniTech Desk · Servicios tecnológicos</title>
+  <meta name="description" content="Solicita y da seguimiento a servicios de reparación de hardware y desarrollo de software de la Facultad de Ingeniería y Tecnología.">
+  <meta name="theme-color" content="#1e3a8a">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="dist/styles.css">
+
+  <!-- Orden importante: cada archivo usa lo que definió el anterior. -->
+  <script defer src="js/config.js"></script>
+  <script defer src="js/icons.js"></script>
+  <script defer src="js/constants.js"></script>
+  <script defer src="js/utils.js"></script>
+  <script defer src="js/validation.js"></script>
+  <script defer src="js/ui.js"></script>
+  <script defer src="js/api.js"></script>
+  <script defer src="js/views/new-ticket.js"></script>
+  <script defer src="js/views/track.js"></script>
+  <script defer src="js/views/admin.js"></script>
+  <script defer src="js/app.js"></script>
+</head>
+<body class="flex min-h-screen flex-col font-sans">
+
+  <a href="#main" class="skip-link" id="skipLink">Saltar al contenido principal</a>
+
+  <header class="sticky top-0 z-50 bg-university-900 text-white shadow-lg">
+    <nav class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-4 sm:px-6 lg:px-8" aria-label="Navegación principal">
+      <a href="#/" class="flex items-center gap-2 rounded-md text-lg font-bold tracking-tight sm:gap-3 sm:text-xl">
+        <span data-icon="graduation-cap" data-icon-class="text-2xl text-university-200"></span>
+        <span class="max-[339px]:sr-only">UniTech<span class="font-normal text-university-200 max-[379px]:sr-only">Desk</span></span>
+      </a>
+      <ul class="flex items-center gap-0.5 sm:gap-2" id="navList">
+        <li><a href="#/" data-route="/" class="nav-link"><span data-icon="house"></span><span class="sr-only sm:not-sr-only">Inicio</span></a></li>
+        <li><a href="#/nuevo-ticket" data-route="/nuevo-ticket" class="nav-link"><span data-icon="circle-plus"></span><span class="sr-only sm:not-sr-only">Nuevo ticket</span></a></li>
+        <li><a href="#/consultar" data-route="/consultar" class="nav-link"><span data-icon="search"></span><span class="sr-only sm:not-sr-only">Consultar ticket</span></a></li>
+        <li id="navPanelItem" hidden><a href="#/admin/panel" data-route="/admin/panel" class="nav-link"><span data-icon="clipboard-list"></span><span class="sr-only sm:not-sr-only">Panel de tickets</span></a></li>
+        <li id="navLogoutItem" hidden><button type="button" id="logoutBtn" class="nav-link bg-red-700 hover:bg-red-600"><span data-icon="log-out"></span><span class="sr-only sm:not-sr-only">Cerrar sesión</span></button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div id="demoBanner" hidden class="border-b border-amber-300 bg-amber-100 px-4 py-2 text-center text-sm text-amber-900">
+    <strong>Modo demostración:</strong> los datos son simulados y se guardan solo en este navegador.
+    <button type="button" id="resetDemoBtn" class="ml-1 font-semibold underline hover:no-underline">Restablecer datos de ejemplo</button>
+  </div>
+
+  <noscript>
+    <p class="m-4 rounded-lg border border-red-300 bg-red-50 p-4 text-red-900">Esta aplicación necesita JavaScript para funcionar. Actívalo en tu navegador e inténtalo de nuevo.</p>
+  </noscript>
+
+  <main id="main" tabindex="-1" class="mx-auto w-full max-w-7xl flex-grow px-4 py-8 sm:px-6 lg:px-8">
+
+    <!-- ===================== INICIO ===================== -->
+    <section id="view-home" data-view="home" data-title="Inicio" hidden class="fade-in space-y-10">
+      <div class="overflow-hidden rounded-2xl bg-gradient-to-r from-university-900 to-university-700 px-6 py-14 text-center text-white shadow-lg sm:px-12 sm:py-16">
+        <h1 tabindex="-1" class="text-3xl font-extrabold sm:text-5xl">Centro de Servicios Tecnológicos</h1>
+        <p class="mx-auto mt-4 max-w-2xl text-lg text-university-50">
+          Reparamos tu equipo y desarrollamos software a la medida para estudiantes y clientes externos. Pide tu servicio en línea y sigue el avance con tu código de ticket.
+        </p>
+        <div class="mt-8 flex flex-wrap justify-center gap-3">
+          <a href="#/nuevo-ticket" class="btn bg-white px-6 py-3 text-university-900 hover:bg-university-50">Solicitar servicio</a>
+          <a href="#/consultar" class="btn border border-white/70 px-6 py-3 text-white hover:bg-white/10">Consultar mi ticket</a>
+        </div>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <article class="card p-6">
+          <span class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-2xl text-blue-800"><span data-icon="wrench"></span></span>
+          <h2 class="mb-2 text-xl font-bold">Reparación de hardware</h2>
+          <p class="text-slate-700">Mantenimiento preventivo y correctivo, diagnóstico de fallas y actualización de componentes para laptops y computadoras de escritorio.</p>
+        </article>
+        <article class="card p-6">
+          <span class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 text-2xl text-purple-800"><span data-icon="code-xml"></span></span>
+          <h2 class="mb-2 text-xl font-bold">Desarrollo y soporte de software</h2>
+          <p class="text-slate-700">Aplicaciones web, móviles y de escritorio a la medida, corrección de programas, instalación y soporte, y consultoría en sistemas y bases de datos.</p>
+        </article>
+      </div>
+
+      <section aria-labelledby="how-title" class="card p-6 sm:p-8">
+        <h2 id="how-title" class="text-2xl font-bold">¿Cómo funciona?</h2>
+        <p class="mt-1 text-slate-700">No pagas nada al crear el ticket: primero revisamos y te enviamos una cotización.</p>
+        <ol class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <li class="flex gap-4"><span class="step-dot" aria-hidden="true">1</span><div><h3 class="font-semibold">Crea tu ticket</h3><p class="text-sm text-slate-700">Completa el formulario con los datos del equipo o de tu requerimiento. Recibes un código.</p></div></li>
+          <li class="flex gap-4"><span class="step-dot" aria-hidden="true">2</span><div><h3 class="font-semibold">Revisamos</h3><p class="text-sm text-slate-700">Diagnosticamos el equipo o analizamos lo que necesitas.</p></div></li>
+          <li class="flex gap-4"><span class="step-dot" aria-hidden="true">3</span><div><h3 class="font-semibold">Te cotizamos</h3><p class="text-sm text-slate-700">Te enviamos el costo del trabajo con el detalle de lo que incluye.</p></div></li>
+          <li class="flex gap-4"><span class="step-dot" aria-hidden="true">4</span><div><h3 class="font-semibold">Apruebas</h3><p class="text-sm text-slate-700">Si estás de acuerdo, apruebas la cotización desde «Consultar ticket».</p></div></li>
+          <li class="flex gap-4"><span class="step-dot" aria-hidden="true">5</span><div><h3 class="font-semibold">Trabajamos</h3><p class="text-sm text-slate-700">Reparamos o desarrollamos. Ves el avance con tu código y tu correo.</p></div></li>
+          <li class="flex gap-4"><span class="step-dot" aria-hidden="true">6</span><div><h3 class="font-semibold">Pago y entrega</h3><p class="text-sm text-slate-700">Pagas con el método que elegiste y recibes tu equipo o tu software.</p></div></li>
+        </ol>
+      </section>
+
+      <section aria-labelledby="contact-title" class="card p-6 sm:p-8">
+        <h2 id="contact-title" class="text-2xl font-bold">Contacto</h2>
+        <ul class="mt-4 space-y-2 text-slate-700" id="contactList"></ul>
+        <a id="homeWhatsapp" target="_blank" rel="noopener noreferrer" class="btn mt-5 bg-green-700 text-white hover:bg-green-800">
+          <span data-icon="whatsapp"></span> Escríbenos por WhatsApp<span class="sr-only"> (se abre en una pestaña nueva)</span>
+        </a>
+      </section>
+    </section>
+
+    <!-- ===================== NUEVO TICKET ===================== -->
+    <section id="view-new-ticket" data-view="new-ticket" data-title="Nuevo ticket" hidden class="fade-in">
+      <div class="mx-auto max-w-3xl">
+
+        <div id="ticketSuccess" hidden class="card overflow-hidden" tabindex="-1">
+          <div class="bg-emerald-50 px-6 py-8 text-center sm:px-8">
+            <span class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-3xl text-emerald-800"><span data-icon="circle-check"></span></span>
+            <h2 id="successTitle" tabindex="-1" class="text-2xl font-bold text-slate-900">¡Recibimos tu solicitud!</h2>
+            <p class="mt-2 text-slate-700">Guarda tu código. Con él y tu correo podrás consultar el avance y aprobar la cotización.</p>
+            <div class="mx-auto mt-5 flex max-w-sm items-center justify-between gap-3 rounded-lg border border-emerald-300 bg-white px-4 py-3">
+              <span class="text-2xl font-bold tracking-wide text-university-900" id="successCode"></span>
+              <button type="button" id="copyCodeBtn" class="btn btn-secondary btn-sm"><span data-icon="copy"></span> Copiar</button>
+            </div>
+            <p class="mt-3 text-sm text-slate-700"><span id="successEmailLead">Tu solicitud quedó asociada al correo</span> <strong id="successEmail" class="break-all"></strong>. Necesitarás ese correo junto con tu código para consultar el avance.</p>
+          </div>
+          <div class="flex flex-wrap justify-center gap-3 px-6 py-5 sm:px-8">
+            <a id="successTrackLink" href="#/consultar" class="btn btn-primary"><span data-icon="search"></span> Consultar este ticket</a>
+            <button type="button" id="newAnotherBtn" class="btn btn-secondary"><span data-icon="circle-plus"></span> Crear otro ticket</button>
+          </div>
+        </div>
+
+        <div id="ticketFormCard" class="card overflow-hidden">
+          <div class="card-header">
+            <h1 tabindex="-1" class="flex items-center gap-2 text-2xl font-bold text-slate-900"><span data-icon="ticket" data-icon-class="text-university-700"></span> Crear nuevo ticket</h1>
+            <p class="mt-1 text-sm text-slate-700">Completa el formulario con los detalles de tu solicitud. Los campos con <span class="req" aria-hidden="true">*</span><span class="sr-only">asterisco</span> son obligatorios.</p>
+          </div>
+
+          <form id="ticketForm" class="card-body space-y-8" novalidate autocomplete="on">
+            <div id="formErrors" role="alert" tabindex="-1" hidden class="rounded-lg border border-red-300 bg-red-50 p-4 text-sm text-red-900"></div>
+
+            <!-- 1. Solicitante -->
+            <section aria-labelledby="sec-requester" class="space-y-5">
+              <h2 id="sec-requester" class="section-title"><span data-icon="user" data-icon-class="text-university-700"></span> 1. Datos del solicitante</h2>
+
+              <fieldset class="field">
+                <legend>Tipo de solicitante <span class="req" aria-hidden="true">*</span></legend>
+                <div class="grid gap-3 sm:grid-cols-2">
+                  <label class="choice">
+                    <input type="radio" name="requesterType" id="requesterType-STUDENT" value="STUDENT" required data-label="Tipo de solicitante" data-rules="required">
+                    <span class="choice-body"><span data-icon="graduation-cap" data-icon-class="mt-0.5 text-xl text-university-700"></span><span><span class="choice-title">Estudiante universitario</span><span class="choice-desc">Necesitas tu carnet, carrera y recinto.</span></span></span>
+                  </label>
+                  <label class="choice">
+                    <input type="radio" name="requesterType" id="requesterType-EXTERNAL" value="EXTERNAL">
+                    <span class="choice-body"><span data-icon="building-2" data-icon-class="mt-0.5 text-xl text-university-700"></span><span><span class="choice-title">Cliente externo</span><span class="choice-desc">Persona o empresa fuera de la universidad.</span></span></span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <div class="grid gap-5 md:grid-cols-3">
+                <div class="field">
+                  <label class="label" for="fullName">Nombre completo <span class="req" aria-hidden="true">*</span></label>
+                  <input id="fullName" name="fullName" type="text" class="input" autocomplete="name" maxlength="120" required data-label="Nombre completo" data-rules="required|minLen:3" placeholder="Ej. Juan Pérez">
+                </div>
+                <div class="field">
+                  <label class="label" for="email">Correo electrónico <span class="req" aria-hidden="true">*</span></label>
+                  <input id="email" name="email" type="email" class="input" autocomplete="email" maxlength="254" required data-label="Correo electrónico" data-rules="required|email" placeholder="correo@ejemplo.com" aria-describedby="email-hint">
+                  <p id="email-hint" class="hint">Lo usarás para consultar tu ticket.</p>
+                </div>
+                <div class="field">
+                  <label class="label" for="phone">Teléfono <span class="req" aria-hidden="true">*</span></label>
+                  <input id="phone" name="phone" type="tel" inputmode="tel" class="input" autocomplete="tel" maxlength="20" required data-label="Teléfono" data-rules="required|phone" placeholder="Ej. 8888-8888">
+                </div>
+              </div>
+
+              <div id="studentFields" hidden class="grid gap-5 md:grid-cols-3">
+                <div class="field">
+                  <label class="label" for="studentId">Carnet <span class="req" aria-hidden="true">*</span></label>
+                  <input id="studentId" name="studentId" type="text" class="input" autocomplete="off" maxlength="15" data-label="Carnet" data-rules="required|studentId" placeholder="Ej. 20261234">
+                </div>
+                <div class="field">
+                  <label class="label" for="majorId">Facultad / carrera <span class="req" aria-hidden="true">*</span></label>
+                  <select id="majorId" name="majorId" class="input" data-label="Facultad / carrera" data-rules="required"><option value="">Cargando…</option></select>
+                </div>
+                <div class="field">
+                  <label class="label" for="campusId">Recinto / campus <span class="req" aria-hidden="true">*</span></label>
+                  <select id="campusId" name="campusId" class="input" data-label="Recinto / campus" data-rules="required"><option value="">Cargando…</option></select>
+                </div>
+              </div>
+
+              <div id="externalFields" hidden class="grid gap-5 md:grid-cols-2">
+                <div class="field">
+                  <label class="label" for="company">Razón social <span class="req" aria-hidden="true">*</span></label>
+                  <input id="company" name="company" type="text" class="input" autocomplete="organization" maxlength="150" data-label="Razón social" data-rules="required|minLen:2" placeholder="Ej. Empresa S.A.">
+                </div>
+                <div class="field">
+                  <label class="label" for="ruc">RUC <span class="req" aria-hidden="true">*</span></label>
+                  <input id="ruc" name="ruc" type="text" class="input uppercase" autocomplete="off" maxlength="14" data-label="RUC" data-rules="required|ruc" placeholder="Ej. J0310000000000" aria-describedby="ruc-hint">
+                  <p id="ruc-hint" class="hint">14 caracteres, sin espacios ni guiones.</p>
+                </div>
+              </div>
+            </section>
+
+            <!-- 2. Servicio -->
+            <section aria-labelledby="sec-service" class="space-y-5">
+              <h2 id="sec-service" class="section-title"><span data-icon="wrench" data-icon-class="text-university-700"></span> 2. Servicio que necesitas</h2>
+
+              <fieldset class="field">
+                <legend>Tipo de servicio <span class="req" aria-hidden="true">*</span></legend>
+                <div class="grid gap-3 sm:grid-cols-2">
+                  <label class="choice">
+                    <input type="radio" name="serviceType" id="serviceType-HARDWARE" value="HARDWARE" required data-label="Tipo de servicio" data-rules="required">
+                    <span class="choice-body"><span data-icon="wrench" data-icon-class="mt-0.5 text-xl text-blue-700"></span><span><span class="choice-title">Reparación de hardware</span><span class="choice-desc">Laptop o computadora de escritorio.</span></span></span>
+                  </label>
+                  <label class="choice">
+                    <input type="radio" name="serviceType" id="serviceType-SOFTWARE" value="SOFTWARE">
+                    <span class="choice-body"><span data-icon="code-xml" data-icon-class="mt-0.5 text-xl text-purple-700"></span><span><span class="choice-title">Software</span><span class="choice-desc">Desarrollo, corrección, instalación, soporte o consultoría.</span></span></span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <!-- Hardware -->
+              <div id="hardwareFields" hidden class="space-y-5 rounded-lg border border-slate-200 bg-slate-50 p-5">
+                <h3 class="flex items-center gap-2 text-sm font-bold text-slate-800"><span data-icon="monitor" data-icon-class="text-university-700"></span> Detalles del equipo</h3>
+                <div class="grid gap-5 md:grid-cols-2">
+                  <div class="field">
+                    <label class="label" for="equipmentType">Tipo de equipo <span class="req" aria-hidden="true">*</span></label>
+                    <select id="equipmentType" name="equipmentType" class="input" data-label="Tipo de equipo" data-rules="required"></select>
+                  </div>
+                  <div class="field">
+                    <label class="label" for="brand">Marca <span class="req" aria-hidden="true">*</span></label>
+                    <input id="brand" name="brand" type="text" class="input" autocomplete="off" maxlength="60" data-label="Marca" data-rules="required" placeholder="Ej. Dell, HP, Lenovo">
+                  </div>
+                  <div class="field">
+                    <label class="label" for="model">Modelo <span class="req" aria-hidden="true">*</span></label>
+                    <input id="model" name="model" type="text" class="input" autocomplete="off" maxlength="80" data-label="Modelo" data-rules="required" placeholder="Ej. XPS 15, Pavilion, OptiPlex 3080">
+                  </div>
+                  <div class="field">
+                    <label class="label" for="serial">Número de serie <span class="font-normal text-slate-600">(opcional)</span></label>
+                    <input id="serial" name="serial" type="text" class="input" autocomplete="off" maxlength="60" data-label="Número de serie">
+                  </div>
+                </div>
+
+                <fieldset class="field">
+                  <legend>¿El equipo enciende? <span class="req" aria-hidden="true">*</span></legend>
+                  <div class="flex flex-wrap gap-x-6 gap-y-2">
+                    <label class="check-row"><input type="radio" name="powersOn" id="powersOn-YES" value="YES" data-label="¿El equipo enciende?" data-rules="required"> Sí, enciende</label>
+                    <label class="check-row"><input type="radio" name="powersOn" value="NO"> No enciende</label>
+                    <label class="check-row"><input type="radio" name="powersOn" value="SOMETIMES"> A veces</label>
+                  </div>
+                </fieldset>
+
+                <fieldset class="field">
+                  <legend>Accesorios que entregas <span class="font-normal text-slate-600">(opcional)</span></legend>
+                  <div class="flex flex-wrap gap-x-6 gap-y-2" id="accessoriesList"></div>
+                  <input id="accessoriesOther" name="accessoriesOther" type="text" class="input mt-3" maxlength="120" autocomplete="off" aria-label="Otros accesorios" placeholder="Otros accesorios (opcional)">
+                </fieldset>
+
+                <div class="field">
+                  <label class="check-row">
+                    <input type="checkbox" id="backupAck" name="backupAck" required data-label="Aviso de respaldo" data-rules="required" data-msg-required="Confirma que entiendes el aviso sobre el respaldo de tu información.">
+                    <span>Entiendo que debo respaldar mi información antes de entregar el equipo y que el servicio puede requerir borrar o reinstalar el sistema. <span class="req" aria-hidden="true">*</span></span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Software -->
+              <div id="softwareFields" hidden class="space-y-5 rounded-lg border border-slate-200 bg-slate-50 p-5">
+                <h3 class="flex items-center gap-2 text-sm font-bold text-slate-800"><span data-icon="code-xml" data-icon-class="text-university-700"></span> Detalles del trabajo de software</h3>
+                <div class="grid gap-5 md:grid-cols-2">
+                  <div class="field">
+                    <label class="label" for="softwareKind">Tipo de trabajo <span class="req" aria-hidden="true">*</span></label>
+                    <select id="softwareKind" name="softwareKind" class="input" data-label="Tipo de trabajo" data-rules="required"></select>
+                  </div>
+                  <div class="field">
+                    <label class="label" for="desiredDate">Fecha deseada <span class="font-normal text-slate-600">(opcional)</span></label>
+                    <input id="desiredDate" name="desiredDate" type="date" class="input" data-label="Fecha deseada" data-rules="futureDate">
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label" for="referenceUrl">Enlace de referencia <span class="font-normal text-slate-600">(opcional)</span></label>
+                  <input id="referenceUrl" name="referenceUrl" type="url" inputmode="url" class="input" maxlength="300" autocomplete="off" data-label="Enlace de referencia" data-rules="url" placeholder="https://github.com/usuario/proyecto" aria-describedby="ref-hint">
+                  <p id="ref-hint" class="hint">Repositorio, documento o sitio relacionado con tu solicitud.</p>
+                </div>
+              </div>
+            </section>
+
+            <!-- 3. Detalle -->
+            <section aria-labelledby="sec-detail" class="space-y-5">
+              <h2 id="sec-detail" class="section-title"><span data-icon="file-text" data-icon-class="text-university-700"></span> 3. Detalle de la solicitud</h2>
+
+              <div class="field">
+                <label class="label" for="description">Descripción del problema o requerimiento <span class="req" aria-hidden="true">*</span></label>
+                <textarea id="description" name="description" rows="5" class="input" maxlength="2000" required data-label="Descripción" data-rules="required|minLen:15" aria-describedby="desc-hint desc-count" placeholder="Cuéntanos qué pasa, desde cuándo y qué intentaste."></textarea>
+                <div class="flex justify-between gap-4">
+                  <p id="desc-hint" class="hint">Mientras más detalle des, más precisa será la cotización.</p>
+                  <p id="desc-count" class="hint shrink-0" aria-live="off">0 / 2000</p>
+                </div>
+              </div>
+
+              <div class="field" id="filesField">
+                <span class="label" id="filesLabel">Fotos o archivos de apoyo <span class="font-normal text-slate-600">(opcional)</span></span>
+                <label class="dropzone" id="dropzone" for="fileInput">
+                  <span data-icon="upload" data-icon-class="text-3xl text-slate-600"></span>
+                  <span class="mt-2 text-sm text-slate-800"><span class="font-semibold text-university-700 underline">Elige archivos</span> o arrástralos aquí</span>
+                  <span class="mt-1 text-xs text-slate-600" id="filesHelp"></span>
+                  <input id="fileInput" type="file" multiple class="sr-only" aria-describedby="filesHelp fileErrors">
+                </label>
+                <ul id="fileList" class="mt-3 space-y-2"></ul>
+                <div id="fileErrors" class="mt-2 space-y-1 text-xs font-medium text-red-700" role="alert"></div>
+              </div>
+
+              <div class="field">
+                <label class="label" for="urgency">Nivel de urgencia <span class="req" aria-hidden="true">*</span></label>
+                <select id="urgency" name="urgency" class="input md:w-1/2" required data-label="Nivel de urgencia" data-rules="required">
+                  <option value="LOW">Baja · puede esperar</option>
+                  <option value="MEDIUM" selected>Media · normal</option>
+                  <option value="HIGH">Alta · emergencia o crítico</option>
+                </select>
+              </div>
+            </section>
+
+            <!-- 4. Pago -->
+            <section aria-labelledby="sec-payment" class="space-y-5">
+              <h2 id="sec-payment" class="section-title"><span data-icon="banknote" data-icon-class="text-university-700"></span> 4. Forma de pago preferida</h2>
+              <div class="flex items-start gap-3 rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
+                <span data-icon="info" data-icon-class="mt-0.5 text-lg"></span>
+                <p><strong>No pagas nada ahora.</strong> Primero revisamos tu solicitud y te enviamos una cotización. El pago se hace después de que la apruebes, y aquí solo nos dices cómo preferirías pagar.</p>
+              </div>
+              <fieldset class="field">
+                <legend>Método de pago preferido <span class="req" aria-hidden="true">*</span></legend>
+                <div class="grid gap-3 md:grid-cols-3">
+                  <label class="choice">
+                    <input type="radio" name="preferredPaymentMethod" id="pay-CASH" value="CASH" required data-label="Método de pago" data-rules="required">
+                    <span class="choice-body"><span data-icon="banknote" data-icon-class="mt-0.5 text-xl text-emerald-700"></span><span><span class="choice-title">Efectivo</span><span class="choice-desc">Pago en caja de la universidad.</span></span></span>
+                  </label>
+                  <label class="choice">
+                    <input type="radio" name="preferredPaymentMethod" id="pay-TRANSFER" value="TRANSFER">
+                    <span class="choice-body"><span data-icon="landmark" data-icon-class="mt-0.5 text-xl text-blue-700"></span><span><span class="choice-title">Transferencia</span><span class="choice-desc">Depósito a cuenta oficial.</span></span></span>
+                  </label>
+                  <label class="choice">
+                    <input type="radio" name="preferredPaymentMethod" id="pay-CARD" value="CARD">
+                    <span class="choice-body"><span data-icon="credit-card" data-icon-class="mt-0.5 text-xl text-purple-700"></span><span><span class="choice-title">Tarjeta</span><span class="choice-desc">Enlace de pago seguro, más adelante.</span></span></span>
+                  </label>
+                </div>
+              </fieldset>
+            </section>
+
+            <!-- 5. Confirmación -->
+            <section aria-labelledby="sec-confirm" class="space-y-5">
+              <h2 id="sec-confirm" class="section-title"><span data-icon="shield-check" data-icon-class="text-university-700"></span> 5. Confirmación</h2>
+
+              <div class="field">
+                <label class="check-row">
+                  <input type="checkbox" id="acceptTerms" name="acceptTerms" required data-label="Condiciones" data-rules="required" data-msg-required="Debes aceptar las condiciones para enviar la solicitud.">
+                  <span>He leído y acepto el <a href="#/privacidad" target="_blank" rel="noopener" class="font-medium text-university-700 underline hover:no-underline">tratamiento de datos personales y las condiciones del servicio<span class="sr-only"> (se abre en una pestaña nueva)</span></a>. <span class="req" aria-hidden="true">*</span></span>
+                </label>
+              </div>
+
+              <!-- Campo trampa para bots: las personas no lo ven ni lo llenan. -->
+              <div class="hp" aria-hidden="true">
+                <label>No llenes este campo<input type="text" id="hp_field" name="hp_field" tabindex="-1" autocomplete="off"></label>
+              </div>
+
+              <div id="captchaBox" hidden tabindex="-1" class="field">
+                <div id="captchaWidget"></div>
+              </div>
+            </section>
+
+            <div class="flex flex-col-reverse gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:justify-end">
+              <button type="button" id="resetFormBtn" class="btn btn-ghost">Limpiar formulario</button>
+              <button type="submit" id="submitTicketBtn" class="btn btn-primary px-6"><span data-icon="send"></span> Enviar solicitud</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CONSULTAR TICKET ===================== -->
+    <section id="view-track" data-view="track" data-title="Consultar ticket" hidden class="fade-in">
+      <div class="mx-auto max-w-3xl space-y-6">
+        <div class="card overflow-hidden">
+          <div class="card-header">
+            <h1 tabindex="-1" class="flex items-center gap-2 text-2xl font-bold text-slate-900"><span data-icon="search" data-icon-class="text-university-700"></span> Consultar mi ticket</h1>
+            <p class="mt-1 text-sm text-slate-700">Escribe el código que recibiste al crear tu solicitud y el correo que usaste.</p>
+          </div>
+          <form id="trackForm" class="card-body grid gap-5 md:grid-cols-[1fr_1fr_auto] md:items-end" novalidate>
+            <div class="field">
+              <label class="label" for="trackCode">Código del ticket <span class="req" aria-hidden="true">*</span></label>
+              <input id="trackCode" name="trackCode" type="text" class="input uppercase" autocomplete="off" maxlength="14" required data-label="Código del ticket" data-rules="required|ticketCode" placeholder="UTD-1001">
+            </div>
+            <div class="field">
+              <label class="label" for="trackEmail">Correo electrónico <span class="req" aria-hidden="true">*</span></label>
+              <input id="trackEmail" name="trackEmail" type="email" class="input" autocomplete="email" maxlength="254" required data-label="Correo electrónico" data-rules="required|email" placeholder="correo@ejemplo.com">
+            </div>
+            <button type="submit" id="trackBtn" class="btn btn-primary h-[2.625rem]"><span data-icon="search"></span> Consultar</button>
+          </form>
+        </div>
+        <div id="trackResult" aria-live="polite" class="space-y-6"></div>
+      </div>
+    </section>
+
+    <!-- ===================== PRIVACIDAD Y CONDICIONES ===================== -->
+    <!-- NOTA PARA EL EQUIPO: este texto es una base genérica. Debe revisarlo la universidad antes de publicarlo. -->
+    <section id="view-privacy" data-view="privacy" data-title="Privacidad y condiciones" hidden class="fade-in">
+      <article class="card mx-auto max-w-3xl p-6 sm:p-8">
+        <h1 tabindex="-1" class="text-2xl font-bold text-slate-900">Privacidad y condiciones del servicio</h1>
+        <div class="mt-5 space-y-6 text-slate-700">
+          <section><h2 class="mb-1 text-lg font-semibold text-slate-900">Qué datos pedimos</h2>
+            <p>Nombre, correo, teléfono y, según el caso, carnet, carrera y recinto (estudiantes) o razón social y RUC (clientes externos). También la descripción de tu solicitud y los archivos que decidas adjuntar.</p></section>
+          <section><h2 class="mb-1 text-lg font-semibold text-slate-900">Para qué los usamos</h2>
+            <p>Solo para gestionar tu servicio: contactarte, cotizar, avisarte del avance, cobrar y entregarte tu equipo o software. No los vendemos ni los usamos para publicidad.</p></section>
+          <section><h2 class="mb-1 text-lg font-semibold text-slate-900">Quién puede verlos</h2>
+            <p>El personal autorizado de UniTech Desk. Puedes pedir que corrijamos o eliminemos tus datos escribiéndonos por los medios de contacto de la página de inicio, salvo lo que debamos conservar por obligación legal o contable.</p></section>
+          <section><h2 class="mb-1 text-lg font-semibold text-slate-900">Respaldo de información</h2>
+            <p>Para reparar un equipo puede ser necesario revisar, borrar o reinstalar el sistema. <strong>Respalda tu información antes de entregarlo:</strong> no nos hacemos responsables por datos que no hayan sido respaldados.</p></section>
+          <section><h2 class="mb-1 text-lg font-semibold text-slate-900">Equipos no retirados</h2>
+            <p>Cuando te avisemos que tu equipo está listo, tendrás <strong><span data-config="policy.unclaimedDays">30</span> días</strong> para retirarlo. Pasado ese plazo podremos aplicar las medidas que establezca la universidad.</p></section>
+          <section><h2 class="mb-1 text-lg font-semibold text-slate-900">Cotización y pago</h2>
+            <p>No se cobra al crear el ticket. El costo final se define después de revisar el equipo o analizar el requerimiento y solo se realiza el trabajo cuando apruebas la cotización. El pago se confirma antes de la entrega. Nunca te pediremos datos de tarjeta por correo, WhatsApp ni por esta página.</p></section>
+          <section><h2 class="mb-1 text-lg font-semibold text-slate-900">Seguridad</h2>
+            <p>Usamos conexiones cifradas y limitamos el acceso a tus datos. Aun así, ningún sistema es infalible: si notas algo extraño en tu ticket, avísanos de inmediato.</p></section>
+        </div>
+        <p class="mt-8"><a href="#/nuevo-ticket" class="btn btn-primary">Volver al formulario</a></p>
+      </article>
+    </section>
+
+    <!-- ===================== ACCESO DEL PERSONAL ===================== -->
+    <section id="view-login" data-view="login" data-title="Acceso del personal" hidden class="fade-in">
+      <div class="card mx-auto mt-6 max-w-md overflow-hidden">
+        <div class="card-header text-center">
+          <span class="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-university-100 text-3xl text-university-700"><span data-icon="shield-user"></span></span>
+          <h1 tabindex="-1" class="text-2xl font-bold text-slate-900">Acceso del personal</h1>
+          <p class="mt-1 text-sm text-slate-700">Ingresa tus credenciales para ver el panel de tickets.</p>
+        </div>
+        <form id="loginForm" class="card-body space-y-5" novalidate>
+          <div id="loginError" role="alert" hidden class="rounded-lg border border-red-300 bg-red-50 p-3 text-center text-sm font-medium text-red-900"></div>
+          <div class="field">
+            <label class="label" for="loginUser">Usuario</label>
+            <input id="loginUser" name="username" type="text" class="input" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+          </div>
+          <div class="field">
+            <label class="label" for="loginPass">Contraseña</label>
+            <div class="relative">
+              <input id="loginPass" name="password" type="password" class="input pr-11" autocomplete="current-password" required>
+              <button type="button" id="togglePass" class="absolute right-1 top-1/2 -translate-y-1/2 btn-icon" aria-label="Mostrar contraseña" aria-pressed="false"><span data-icon="eye"></span></button>
+            </div>
+          </div>
+          <button type="submit" id="loginBtn" class="btn btn-primary w-full py-3"><span data-icon="log-in"></span> Iniciar sesión</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===================== PANEL DE TICKETS ===================== -->
+    <section id="view-dashboard" data-view="dashboard" data-title="Panel de tickets" hidden class="fade-in space-y-6">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 tabindex="-1" class="flex items-center gap-2 text-2xl font-bold text-slate-900"><span data-icon="clipboard-list" data-icon-class="text-university-700"></span> Panel de tickets</h1>
+          <p class="mt-1 text-sm text-slate-700">Gestión y estado de todos los trabajos solicitados.</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button type="button" id="refreshBtn" class="btn btn-secondary"><span data-icon="refresh-cw"></span> Actualizar</button>
+          <button type="button" id="exportBtn" class="btn btn-secondary"><span data-icon="download"></span> Exportar CSV</button>
+        </div>
+      </div>
+
+      <div id="statsGrid" class="grid grid-cols-2 gap-4 lg:grid-cols-4" aria-label="Resumen"></div>
+
+      <div class="card overflow-hidden">
+        <form id="filtersForm" class="grid gap-3 border-b border-slate-200 bg-slate-50 p-4 sm:grid-cols-2 lg:grid-cols-6" role="search" aria-label="Filtrar tickets">
+          <div class="sm:col-span-2">
+            <label class="label" for="filterQ">Buscar</label>
+            <div class="relative">
+              <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-600" data-icon="search"></span>
+              <input id="filterQ" type="search" class="input pl-10" placeholder="Código, nombre, correo, carnet o RUC" autocomplete="off">
+            </div>
+          </div>
+          <div><label class="label" for="filterStatus">Estado</label><select id="filterStatus" class="input"></select></div>
+          <div><label class="label" for="filterService">Servicio</label><select id="filterService" class="input"></select></div>
+          <div><label class="label" for="filterUrgency">Urgencia</label><select id="filterUrgency" class="input"></select></div>
+          <div><label class="label" for="filterPayment">Pago</label><select id="filterPayment" class="input"></select></div>
+          <div class="sm:col-span-2 lg:col-span-2">
+            <label class="label" for="filterSort">Ordenar por</label>
+            <select id="filterSort" class="input">
+              <option value="date_desc">Más recientes primero</option>
+              <option value="date_asc">Más antiguos primero</option>
+              <option value="urgency_desc">Mayor urgencia primero</option>
+            </select>
+          </div>
+          <div class="flex items-end sm:col-span-2 lg:col-span-4 lg:justify-end">
+            <button type="button" id="clearFiltersBtn" class="btn btn-ghost btn-sm">Quitar filtros</button>
+          </div>
+        </form>
+
+        <div id="ticketsRegion" aria-live="polite">
+          <table class="resp-table w-full border-collapse text-left">
+            <caption class="sr-only">Lista de tickets</caption>
+            <thead>
+              <tr class="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wider text-slate-700">
+                <th scope="col" class="px-5 py-3 font-semibold">Código / fecha</th>
+                <th scope="col" class="px-5 py-3 font-semibold">Solicitante</th>
+                <th scope="col" class="px-5 py-3 font-semibold">Servicio / detalle</th>
+                <th scope="col" class="px-5 py-3 font-semibold">Urgencia / pago</th>
+                <th scope="col" class="px-5 py-3 font-semibold">Estado / asignado</th>
+                <th scope="col" class="px-5 py-3 text-center font-semibold">Acción</th>
+              </tr>
+            </thead>
+            <tbody id="ticketsBody" class="divide-y divide-slate-100 text-sm"></tbody>
+          </table>
+          <div id="ticketsState" class="hidden flex-col items-center justify-center px-6 py-14 text-center text-slate-700"></div>
+        </div>
+
+        <div class="flex flex-col items-center justify-between gap-3 border-t border-slate-200 bg-slate-50 px-5 py-3 text-sm text-slate-700 sm:flex-row" id="pagination">
+          <p id="pageInfo"></p>
+          <div class="flex items-center gap-2">
+            <button type="button" id="prevPage" class="btn btn-secondary btn-sm"><span data-icon="chevron-left"></span> Anterior</button>
+            <span id="pageNum" class="px-2 font-medium" aria-live="polite"></span>
+            <button type="button" id="nextPage" class="btn btn-secondary btn-sm">Siguiente <span data-icon="chevron-right"></span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== NO ENCONTRADA ===================== -->
+    <section id="view-notfound" data-view="notfound" data-title="Página no encontrada" hidden class="fade-in">
+      <div class="card mx-auto max-w-md p-8 text-center">
+        <h1 tabindex="-1" class="text-2xl font-bold text-slate-900">Página no encontrada</h1>
+        <p class="mt-2 text-slate-700">La dirección que abriste no existe.</p>
+        <a href="#/" class="btn btn-primary mt-6">Ir al inicio</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="mt-auto bg-slate-900 py-8 text-sm text-slate-300">
+    <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 text-center sm:flex-row sm:text-left">
+      <p>&copy; <span id="year">2026</span> UniTech Desk · Facultad de Ciencias y Sistemas - DACTIC. Todos los derechos reservados.</p>
+      <ul class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
+        <li><a href="#/privacidad" class="underline hover:no-underline">Privacidad y condiciones</a></li>
+        <li><a href="#/admin" class="underline hover:no-underline">Acceso del personal</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- Avisos flotantes -->
+  <div id="toasts" aria-live="polite" class="pointer-events-none fixed bottom-4 right-4 z-[300] flex w-[calc(100%-2rem)] max-w-sm flex-col gap-2"></div>
+
+  <!-- Confirmación -->
+  <dialog id="confirmDialog" class="dlg dlg-sm" aria-labelledby="confirmTitle" aria-describedby="confirmMsg">
+    <div class="dialog-panel">
+      <div class="dialog-body">
+        <h2 id="confirmTitle" class="text-lg font-bold text-slate-900"></h2>
+        <p id="confirmMsg" class="mt-2 text-sm text-slate-700"></p>
+      </div>
+      <div class="dialog-foot">
+        <button type="button" id="confirmCancel" class="btn btn-secondary">Cancelar</button>
+        <button type="button" id="confirmOk" class="btn btn-primary">Confirmar</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Detalle y gestión de un ticket (se llena desde js/views/admin.js) -->
+  <dialog id="ticketDialog" class="dlg" aria-labelledby="ticketDialogTitle">
+    <div class="dialog-panel" id="ticketPanel"></div>
+  </dialog>
+
+</body>
+</html>

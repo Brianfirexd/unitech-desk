@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>UniTechDesk.Api</RootNamespace>
+    <AssemblyName>UniTechDesk.Api</AssemblyName>
+    <UserSecretsId>unitech-desk-api-6f1d9c6e</UserSecretsId>
+    <InvariantGlobalization>false</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UniTechDesk.Core\UniTechDesk.Core.csproj" />
+    <ProjectReference Include="..\UniTechDesk.Data\UniTechDesk.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Conexión a SQL Server -->
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.7" />
+    <!-- Contraseñas del personal (BCrypt) -->
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <!-- Emitir y validar el JWT del personal (HS256) -->
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.19.2" />
+  </ItemGroup>
+
+</Project>

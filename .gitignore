@@ -1,0 +1,10 @@
+bin/
+obj/
+*.user
+.vs/
+.idea/
+# Archivos subidos por los clientes y secretos locales: nunca al repositorio
+storage/
+appsettings.Production.json
+appsettings.Local.json
+secrets.json

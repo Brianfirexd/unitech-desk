@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Lógica de negocio, reglas y contratos. Sin paquetes NuGet: solo el framework compartido de ASP.NET Core
+       (registro de eventos, opciones y JSON) para que se pueda compilar y probar sin depender de nada externo. -->
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+</Project>

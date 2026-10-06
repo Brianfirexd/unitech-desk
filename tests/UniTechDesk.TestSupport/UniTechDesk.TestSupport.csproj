@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Piezas para probar sin SQL Server: una "base de datos" en memoria que imita las restricciones y triggers de database/*.sql,
+       un reloj manual y un servidor de correo falso. NO es para producción. -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\UniTechDesk.Core\UniTechDesk.Core.csproj" />
+  </ItemGroup>
+
+</Project>

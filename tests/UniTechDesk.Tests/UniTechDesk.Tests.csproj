@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Pruebas automáticas. No necesitan SQL Server: los servicios y la API se prueban contra una base en memoria
+       (TestSupport) que imita las restricciones y triggers de database/*.sql. Ejecutar:  dotnet test -->
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <!-- Reglas de análisis de código: útiles en src/, ruido en las pruebas. -->
+    <AnalysisLevel>none</AnalysisLevel>
+    <NoWarn>$(NoWarn);xUnit1051;xUnit2013;xUnit1031</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Para arrancar la API real (Kestrel) dentro de las pruebas -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\UniTechDesk.Core\UniTechDesk.Core.csproj" />
+    <ProjectReference Include="..\..\src\UniTechDesk.Data\UniTechDesk.Data.csproj" />
+    <ProjectReference Include="..\..\src\UniTechDesk.Api\UniTechDesk.Api.csproj" />
+    <ProjectReference Include="..\UniTechDesk.TestSupport\UniTechDesk.TestSupport.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>

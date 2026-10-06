@@ -3,6 +3,7 @@
 Sistema web de **tickets de soporte** para solicitudes de **reparación de hardware** y **desarrollo de software**, pensado para estudiantes y clientes externos de la universidad. El cliente registra su solicitud, recibe una cotización, la aprueba, paga y da seguimiento hasta la entrega; el personal gestiona todo el ciclo desde un panel interno.
 
 - **Aplicación en línea:** `https://<dirección-de-la-aplicación>` *(completar al publicar)*
+- **Panel del personal:** `https://<dirección-de-la-aplicación>/#/admin` (las credenciales de revisión se entregan por separado)
 - **Autor:** Brian Balladares · Universidad Nacional de Ingeniería (UNI)
 - **Curso:** `[nombre del curso]` · **Docente:** `[nombre del docente]`
 
@@ -17,10 +18,9 @@ Sistema web de **tickets de soporte** para solicitudes de **reparación de hardw
 5. [Estructura del repositorio](#5-estructura-del-repositorio)
 6. [Base de datos](#6-base-de-datos)
 7. [Seguridad](#7-seguridad)
-8. [Ejecutar el proyecto en local](#8-ejecutar-el-proyecto-en-local)
-9. [Pruebas](#9-pruebas)
-10. [Despliegue](#10-despliegue)
-11. [Alcance y limitaciones](#11-alcance-y-limitaciones)
+8. [Pruebas](#8-pruebas)
+9. [Despliegue](#9-despliegue)
+10. [Alcance y limitaciones](#10-alcance-y-limitaciones)
 
 ---
 
@@ -150,47 +150,7 @@ Scripts, en este orden: `00_crear_base` → `01_tablas` → `02_indices_y_reglas
 - **Mínimos permisos en la base de datos** (ver sección anterior).
 - La aplicación **se niega a arrancar** con configuraciones inseguras, por ejemplo si se conecta como `sa` o si falta la clave de firma de los tokens, y avisa de otros riesgos al iniciar.
 
-## 8. Ejecutar el proyecto en local
-
-**Requisitos:** .NET 10 SDK, SQL Server 2017 o superior (sirve Express o Developer, con autenticación mixta) y, opcionalmente, una cuenta de SendGrid. Los comandos están escritos para PowerShell.
-
-**1. Crear la base de datos.** Ejecuta en SQL Server Management Studio, en orden, los scripts de la carpeta `database/` (`00` a `05`). Para tener datos de ejemplo, ejecuta también `06_datos_demo.sql`.
-
-**2. Crear el usuario de la aplicación** (al final de `05_seguridad.sql` hay un bloque comentado con este código):
-
-```sql
-USE master;
-CREATE LOGIN unitech_api WITH PASSWORD = N'<contraseña-larga>', CHECK_POLICY = ON;
-GO
-USE UniTechDesk;
-CREATE USER unitech_api FOR LOGIN unitech_api;
-ALTER ROLE rol_unitech_api ADD MEMBER unitech_api;
-GO
-```
-
-**3. Configurar los secretos:**
-
-```powershell
-cd src\UniTechDesk.Api
-dotnet user-secrets set "ConnectionStrings:UniTechDesk" "Server=localhost;Database=UniTechDesk;User Id=unitech_api;Password=<contraseña>;TrustServerCertificate=True"
-dotnet run -- generate-key
-dotnet user-secrets set "Jwt:SigningKey" "<la clave generada>"
-```
-
-Para enviar correos de verdad añade `Email:Provider` = `SendGrid`, `Email:SendGridApiKey`, `Email:FromEmail` y `Email:StaffNotifyTo:0`. Para solo ver los correos en la consola, usa `Email:Provider` = `Console`.
-
-**4. Comprobar y arrancar:**
-
-```powershell
-dotnet run -- check     # valida la configuración y la conexión
-dotnet run              # http://localhost:5080
-```
-
-Con los datos de ejemplo (`06_datos_demo.sql`), el panel del personal está en `http://localhost:5080/#/admin`. Las cuentas de ejemplo son `admin`, `tecnico1`, `tecnico2` y `desarrollador1`, **solo para desarrollo**.
-
-**Comandos de ayuda:** `dotnet run -- help` lista `hash-password`, `generate-key`, `check`, `test-email` y `sync-frontend`.
-
-## 9. Pruebas
+## 8. Pruebas
 
 ```powershell
 dotnet test
@@ -200,16 +160,16 @@ dotnet test
 - **Prueba de extremo a extremo en un navegador real** del flujo completo: crear un ticket con foto, consultarlo, cotizar, aprobar, pagar con comprobante y entregar.
 - **Verificación estática del SQL** (`tools/verificar_sql.py`): contrasta cada sentencia que ejecuta el código con los scripts de la base (tablas, columnas, parámetros y valores de catálogo).
 
-## 10. Despliegue
+## 9. Despliegue
 
 La aplicación se publica en **Microsoft Azure**: la API y el frontend en un **App Service** (.NET 10) y la base de datos en **Azure SQL Database**. En producción los secretos se configuran como variables de entorno del servicio, se activa HTTPS y los correos se envían con SendGrid.
 
 *(Completar con la dirección pública y la fecha de publicación.)*
 
-## 11. Alcance y limitaciones
+## 10. Alcance y limitaciones
 
 Por decisión de alcance, esta versión **no incluye**: recuperación de contraseña, doble factor de autenticación ni administración del personal desde la web (las cuentas se crean en la base de datos). Todo el personal activo tiene los mismos permisos dentro del panel, sin distinción por rol.
 
 El código del ticket es **secuencial**, así que la protección para consultar un ticket es el código **junto con** el correo del cliente, más un límite de consultas por IP. Una mejora natural sería dar a cada ticket un código de acceso aleatorio enviado por correo.
 
-La validación contra un navegador y una base de datos reales se hizo en un entorno local; los límites de carga y el comportamiento bajo mucho tráfico no se midieron.
+No se midieron los límites de carga ni el comportamiento bajo mucho tráfico.

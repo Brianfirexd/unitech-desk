@@ -4,8 +4,8 @@ Sistema web de **tickets de soporte** para solicitudes de **reparación de hardw
 
 - **Aplicación en línea:** `https://<dirección-de-la-aplicación>` *(completar al publicar)*
 - **Panel del personal:** `https://<dirección-de-la-aplicación>/#/admin` (las credenciales de revisión se entregan por separado)
-- **Autor:** Brian Balladares · Universidad Nacional de Ingeniería (UNI)
-- **Curso:** `[nombre del curso]` · **Docente:** `[nombre del docente]`
+- **Autor:** Brian Balladares · Joshua Alvarez Universidad Nacional de Ingeniería (UNI)
+- **Curso:** `Diseño de Sistemas en Internet` · **Docente:** `Walter Quintero`
 
 ---
 

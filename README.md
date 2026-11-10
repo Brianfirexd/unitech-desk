@@ -2,8 +2,7 @@
 
 Sistema web de **tickets de soporte** para solicitudes de **reparación de hardware** y **desarrollo de software**, pensado para estudiantes y clientes externos de la universidad. El cliente registra su solicitud, recibe una cotización, la aprueba, paga y da seguimiento hasta la entrega; el personal gestiona todo el ciclo desde un panel interno.
 
-- **Aplicación en línea:** `https://<dirección-de-la-aplicación>` *(completar al publicar)*
-- **Panel del personal:** `https://<dirección-de-la-aplicación>/#/admin` (las credenciales de revisión se entregan por separado)
+- **Aplicación en línea:** `https://unitechdesk-brian-fgf8ewhncegnf6hd.mexicocentral-01.azurewebsites.net/#/`
 - **Autor:** Brian Balladares · Joshua Alvarez Universidad Nacional de Ingeniería (UNI)
 - **Curso:** `Diseño de Sistemas en Internet` · **Docente:** `Walter Quintero`
 
